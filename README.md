@@ -4,13 +4,13 @@ A professional, enterprise-grade AI agents application built with Python 3.13 an
 
 ## Features
 
-### 🤖 AI Agents
+### AI Agents
 
 - **Weather Agent**: Specialized agent for weather-related queries with real-time data
 - **General Agent**: Multi-purpose agent for various tasks and conversations
 - Built on OpenAI Agents framework with Gemini API integration
 
-### 🌤️ Real Weather Data
+### Real Weather Data
 
 - **Live Weather API**: Real-time weather data from OpenWeatherMap
 - **Multiple Cities**: Query weather for multiple cities in a single request
@@ -18,7 +18,7 @@ A professional, enterprise-grade AI agents application built with Python 3.13 an
 - **Error Handling**: Graceful fallbacks and user-friendly error messages
 - **Temperature Units**: Celsius with "feels like" temperature
 
-### 🛠️ Professional Architecture
+### Professional Architecture
 
 - **Modular Design**: Clean separation of concerns with services, tools, and configuration
 - **Environment Configuration**: Secure API key management with `.env` files
@@ -26,7 +26,7 @@ A professional, enterprise-grade AI agents application built with Python 3.13 an
 - **Extensible Tools**: Plugin-based tool architecture for easy feature additions
 - **Service Layer**: Business logic separated from presentation
 
-### 🔧 Developer Features
+### Developer Features
 
 - **CLI Interface**: Command-line interface with multiple interaction modes
 - **Error Handling**: Comprehensive error handling and logging
