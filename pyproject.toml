@@ -1,0 +1,25 @@
+[project]
+name = "openai-app"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "ShazilK47", email = "shazil.akn@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "click>=8.2.1",
+    "httpx>=0.28.1",
+    "openai-agents>=0.1.0",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+    "python-dotenv>=1.1.1",
+    "structlog>=25.4.0",
+]
+
+[project.scripts]
+openai-app = "openai_app.main:start"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
