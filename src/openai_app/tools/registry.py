@@ -5,6 +5,7 @@ from typing import Dict, List
 from .base import BaseTool
 from .weather import weather_tool
 from .calculator import calculator_tool
+from .search import search_tool
 from ..config.logging import get_logger
 
 logger = get_logger(__name__)
@@ -31,6 +32,7 @@ class ToolRegistry:
             
         self.register_tool(weather_tool)
         self.register_tool(calculator_tool)
+        self.register_tool(search_tool)
         if not self._quiet_mode:
             logger.info("Default tools registered", tool_count=len(self._tools))
         self._initialized = True

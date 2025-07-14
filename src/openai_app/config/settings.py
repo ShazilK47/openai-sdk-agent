@@ -25,6 +25,12 @@ class Settings(BaseSettings):
         default="https://api.openweathermap.org/data/2.5",
         description="Weather API base URL"
     )
+
+    # Search API Configuration (add this after weather config)
+    tavily_api_key: Optional[str] = Field(None, description="Tavily Search API key")
+    tavily_max_results: int = Field(default=5, description="Maximum number of search results")
+    tavily_include_answer: bool = Field(default=True, description="Include AI-generated answer")
+    tavily_include_raw_content: bool = Field(default=False, description="Include raw content")
     
     # Application Settings
     log_level: str = Field(default="INFO", description="Logging level")
