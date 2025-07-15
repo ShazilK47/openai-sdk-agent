@@ -1,7 +1,7 @@
 """
 Weather tool implementation with real API.
 """
-from typing import Optional
+from typing import Optional, Dict, Any
 from agents.tool import function_tool
 
 from .base import BaseTool
@@ -17,8 +17,27 @@ class WeatherTool(BaseTool):
     def __init__(self):
         super().__init__(
             name="get_weather",
-            description="Get weather information for a city"
+            description="Get current weather information for any city"
         )
+    
+    @property
+    def parameters(self) -> Dict[str, Any]:
+        """JSON schema for weather tool parameters"""
+        return {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string",
+                    "description": "City name to get weather for"
+                },
+                "weather_type": {
+                    "type": "string",
+                    "description": "Optional weather type (current, forecast, etc.)",
+                    "default": "current"
+                }
+            },
+            "required": ["city"]
+        }
     
     async def execute(self, city: str, weather_type: Optional[str] = None) -> str:
         """

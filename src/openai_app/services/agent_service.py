@@ -175,6 +175,79 @@ class AgentService:
             logger.error("Error running custom query", error=str(e))
             raise AgentError(f"Failed to run custom query: {str(e)}")
     
+    async def process_message(
+        self,
+        message: str,
+        conversation_id: str = None,
+        agent_name: str = "AI Assistant"
+    ) -> Dict[str, Any]:
+        """
+        Process a message through the AI agent for API usage.
+        
+        Args:
+            message: The user's message
+            conversation_id: Optional conversation ID for tracking
+            agent_name: Name of the agent to use
+            
+        Returns:
+            Dict containing response, conversation_id, and tool usage info
+        """
+        logger.info("Processing API message", 
+                   message=message[:50], 
+                   conversation_id=conversation_id,
+                   agent=agent_name)
+        
+        try:
+            # Get or create agent
+            agent = agent_factory.get_agent(agent_name)
+            if agent is None:
+                logger.info("Creating new agent for API", name=agent_name)
+                agent = agent_factory.create_general_agent(agent_name)
+            
+            self._current_agent = agent
+            
+            # Run the message through the agent
+            result = await Runner.run(agent, message)
+            
+            # Extract tool usage information from the result
+            tool_usage = []
+            if hasattr(result, 'tool_calls') and result.tool_calls:
+                for tool_call in result.tool_calls:
+                    tool_usage.append({
+                        "tool_name": tool_call.get("function", {}).get("name", "unknown"),
+                        "parameters": tool_call.get("function", {}).get("arguments", {}),
+                        "result": getattr(tool_call, 'result', None),
+                        "status": "success" if hasattr(tool_call, 'result') else "unknown",
+                        "execution_time": getattr(tool_call, 'execution_time', None)
+                    })
+            
+            # Store in conversation history with API context
+            conversation_entry = {
+                "query": message,
+                "response": result.final_output,
+                "agent": agent_name,
+                "type": "api",
+                "conversation_id": conversation_id,
+                "tool_usage": tool_usage
+            }
+            self._conversation_history.append(conversation_entry)
+            
+            response_data = {
+                "content": result.final_output,
+                "conversation_id": conversation_id,
+                "tool_usage": tool_usage
+            }
+            
+            logger.info("API message processed successfully", 
+                       response_length=len(result.final_output),
+                       tools_used=len(tool_usage))
+            
+            return response_data
+            
+        except Exception as e:
+            logger.error("Error processing API message", error=str(e))
+            raise AgentError(f"Failed to process message: {str(e)}")
+    
     def get_conversation_history(self) -> list:
         """Get the conversation history."""
         return self._conversation_history.copy()
@@ -195,6 +268,7 @@ class AgentService:
             "weather_queries": len([c for c in self._conversation_history if c["type"] == "weather"]),
             "general_queries": len([c for c in self._conversation_history if c["type"] == "general"]),
             "custom_queries": len([c for c in self._conversation_history if c["type"] == "custom"]),
+            "api_queries": len([c for c in self._conversation_history if c["type"] == "api"]),
             "current_agent": self._current_agent.name if self._current_agent else None,
             "available_agents": agent_factory.list_agents()
         }

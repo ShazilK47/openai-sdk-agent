@@ -139,6 +139,20 @@ class CalculatorTool(BaseTool):
             logger.error("Calculation failed", expression=expression, error=str(e))
             return error_msg
     
+    @property
+    def parameters(self) -> Dict[str, Any]:
+        """JSON schema for calculator tool parameters"""
+        return {
+            "type": "object",
+            "properties": {
+                "expression": {
+                    "type": "string",
+                    "description": "Mathematical expression to evaluate (e.g., '2 + 2', '10 * 5', 'sqrt(16)')"
+                }
+            },
+            "required": ["expression"]
+        }
+    
     def get_function_tool(self):
         """Return the function_tool decorated version."""
         

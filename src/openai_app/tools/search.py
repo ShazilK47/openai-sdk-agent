@@ -1,7 +1,7 @@
 """
 Search tool implementation with Tavily web search.
 """
-from typing import Optional
+from typing import Optional, Dict, Any
 from agents.tool import function_tool
 
 from .base import BaseTool
@@ -66,7 +66,28 @@ class SearchTool(BaseTool):
                 return f"Unable to search the web for '{query}' at the moment. Please try again later."
         
         return search_web
-
+    
+    @property
+    def parameters(self) -> Dict[str, Any]:
+        """JSON schema for search tool parameters"""
+        return {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "Search query to find information about"
+                },
+                "max_results": {
+                    "type": "integer",
+                    "description": "Maximum number of search results to return (default: 5)",
+                    "default": 5,
+                    "minimum": 1,
+                    "maximum": 10
+                }
+            },
+            "required": ["query"]
+        }
+    
 
 # Create a global instance for easy import
 search_tool = SearchTool()
